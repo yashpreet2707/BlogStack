@@ -2,10 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-dotenv.config();
-
 const app = express();
 const port = 3000;
+
+dotenv.config();
 
 // connection to database
 mongoose
