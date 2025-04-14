@@ -6,8 +6,8 @@ import { FaMoon } from "react-icons/fa"
 const Header = () => {
     const path = useLocation().pathname;
     return (
-        <Navbar className='border-b-2' color='gray'>
-            <Link to="/" className='self-center whitespace-nowrap text-sm'>
+        <Navbar fluid className='border-b-4 h-16'>
+            <Link to="/" className='self-center whitespace-nowrap text-sm ml-10'>
                 <div className='flex items-center'>
                     <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
                         B
@@ -26,7 +26,7 @@ const Header = () => {
                     <FaMoon />
                 </Button>
                 <Link to='/sign-in'>
-                    <Button className='bg-gradient-to-r from-purple-600 to-indigo-600' color='gray'>Sign In</Button>
+                    <Button className='bg-gradient-to-r from-purple-600 to-indigo-600 mr-10' color='gray'>Sign In</Button>
                 </Link>
                 <NavbarToggle />
             </div>
