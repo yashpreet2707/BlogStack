@@ -48,12 +48,3 @@ const Header = () => {
 }
 
 export default Header
-
-{/* <Link to="/" className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                    B
-                </div>
-                <span className="text-xl font-bold hidden sm:block">
-                    Blog<span className="text-purple-600">Stack</span>
-                </span>
-            </Link> */}
