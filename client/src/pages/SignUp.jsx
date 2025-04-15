@@ -29,12 +29,13 @@ function SignUp() {
         body: JSON.stringify(formData),
       });
       const data = await result.json();
-      console.log(data) ;
+      console.log(data);
       if (data.success == false) {
+        setLoading(false) ;
         return setErrorMessage(data.message)
       }
       if (result.ok) {
-        navigate('/sign-in')
+        navigate('/home')
       }
       setLoading(false)
     } catch (err) {
@@ -44,7 +45,7 @@ function SignUp() {
   }
 
   return (
-    <div className='min-h-screen mt-20'>
+    <div className='min-h-[85vh] mt-20'>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-10'>
 
         <div className='flex-1'>
@@ -60,7 +61,7 @@ function SignUp() {
         </div>
 
 
-        <div className='flex-1'>
+        <div className='flex-1 mt-[5vh] sm:mt-0'>
           <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
             <div>
               <Label htmlFor='username'>Your username</Label>
@@ -80,14 +81,13 @@ function SignUp() {
             <span>Have an account ? </span>
             <Link to='/sign-in' className='text-blue-500'>Sign In</Link>
           </div>
-          {errorMessage && (
-            <Alert className='mt-5' color='failure'>
-              {errorMessage}
-            </Alert>
-          )}
         </div>
-
       </div>
+      {errorMessage && (
+        <Alert className='mt-3 w-[95vw] mx-auto md:ml-[51%] md:w-[25vw]' color='failure'>
+          {errorMessage}
+        </Alert>
+      )}
     </div>
   )
 }
