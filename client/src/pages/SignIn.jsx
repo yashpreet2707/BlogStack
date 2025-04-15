@@ -1,14 +1,16 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function SignIn() {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error: errorMessage } = useSelector(state => state.user)
 
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
@@ -18,11 +20,14 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return setErrorMessage('Please fill out all the fields.')
+      // return setErrorMessage('Please fill out all the fields.')
+      return dispatch(signInFailure('Please fill out all the fields.'))
     }
     try {
-      setLoading(true);
-      setErrorMessage(null)
+      // setLoading(true);
+      // setErrorMessage(null)
+      dispatch(signInStart());
+
       const result = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -30,17 +35,22 @@ function SignIn() {
       });
       const data = await result.json();
       console.log(data);
+      dispatch(signInSuccess(data))
+
       if (data.success == false) {
-        setLoading(false);
-        return setErrorMessage(data.message)
+        // setLoading(false);
+        // return setErrorMessage(data.message)
+        dispatch(signInFailure(data.message));
       }
       if (result.ok) {
+        // dispatch(signInSuccess(data))
         navigate('/home')
       }
-      setLoading(false)
+      // setLoading(false)
     } catch (err) {
-      setLoading(false)
-      setErrorMessage(err.message)
+      // setLoading(false)
+      // setErrorMessage(err.message)
+      dispatch(signInFailure(err.message))
     }
   }
 
