@@ -5,7 +5,7 @@ import { BsDribbble, BsFacebook, BsGithub, BsInstagram, BsTwitter } from "react-
 
 const FooterComponent = () => {
   return (
-    <Footer container className='border-t-2'>
+    <Footer container className='hidden sm:inline border-t-2 border-gray-600 mt-1'>
 
       <div className='w-full max-w-7xl mx-auto'>
 

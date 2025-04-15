@@ -31,7 +31,7 @@ function SignUp() {
       const data = await result.json();
       console.log(data);
       if (data.success == false) {
-        setLoading(false) ;
+        setLoading(false);
         return setErrorMessage(data.message)
       }
       if (result.ok) {
@@ -45,49 +45,51 @@ function SignUp() {
   }
 
   return (
-    <div className='min-h-[85vh] mt-20'>
-      <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-10'>
+    <div className='min-h-[100vh] sm:min-h-[67vh] lg:min-h-[105vh] flex justify-center items-center -mt-15'>
+      <div>
+        <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-10'>
 
-        <div className='flex-1'>
-          <div className='flex items-center text-4xl'>
-            <div className="w-20 h-18 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
-              B
+          <div className='flex-1'>
+            <div className='flex items-center text-4xl'>
+              <div className="w-20 h-18 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
+                B
+              </div>
+              <span className="font-bold ml-3  dark:text-white">
+                Blog<span className="text-purple-600">Stack</span>
+              </span>
             </div>
-            <span className="font-bold ml-3  dark:text-white">
-              Blog<span className="text-purple-600">Stack</span>
-            </span>
+            <p className='mt-5 '>This is a demo project. You can sign up with your email and password or with Google.</p>
           </div>
-          <p className='mt-5 '>This is a demo project. You can sign up with your email and password or with Google.</p>
-        </div>
 
 
-        <div className='flex-1 mt-[5vh] sm:mt-0'>
-          <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-            <div>
-              <Label htmlFor='username'>Your username</Label>
-              <TextInput id='username' type='text' placeholder='Enter your username' onChange={handleChange} />
+          <div className='flex-1 mt-[5vh] sm:mt-0'>
+            <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+              <div>
+                <Label htmlFor='username'>Your username</Label>
+                <TextInput id='username' type='text' placeholder='Enter your username' onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor='username'>Your email</Label>
+                <TextInput id='email' type='email' placeholder='name@company.com' onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor='username'>Your password</Label>
+                <TextInput id='password' type='password' placeholder='Enter your password' onChange={handleChange} />
+              </div>
+              <Button className='bg-gradient-to-r from-purple-600 to-indigo-600 ' type='submit' disabled={loading}>{loading ? (<><Spinner size='sm' /> <span>Loading...</span></>) : 'Sign Up'}</Button>
+            </form>
+            <div className='flex gap-2 text-sm mt-5'>
+              <span>Have an account ? </span>
+              <Link to='/sign-in' className='text-blue-500'>Sign In</Link>
             </div>
-            <div>
-              <Label htmlFor='username'>Your email</Label>
-              <TextInput id='email' type='email' placeholder='name@company.com' onChange={handleChange} />
-            </div>
-            <div>
-              <Label htmlFor='username'>Your password</Label>
-              <TextInput id='password' type='password' placeholder='Enter your password' onChange={handleChange} />
-            </div>
-            <Button className='bg-gradient-to-r from-purple-600 to-indigo-600 ' type='submit' disabled={loading}>{loading ? (<><Spinner size='sm' /> <span>Loading...</span></>) : 'Sign Up'}</Button>
-          </form>
-          <div className='flex gap-2 text-sm mt-5'>
-            <span>Have an account ? </span>
-            <Link to='/sign-in' className='text-blue-500'>Sign In</Link>
           </div>
         </div>
+        {errorMessage && (
+          <Alert className='mt-3 w-[95vw] mx-auto md:ml-[51%] md:w-[25vw]' color='failure'>
+            {errorMessage}
+          </Alert>
+        )}
       </div>
-      {errorMessage && (
-        <Alert className='mt-3 w-[95vw] mx-auto md:ml-[51%] md:w-[25vw]' color='failure'>
-          {errorMessage}
-        </Alert>
-      )}
     </div>
   )
 }
