@@ -1,14 +1,18 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import OAuth from '../components/OAuth';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 
 function SignUp() {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { loading, error: errorMessage } = useSelector(state => state.user);
 
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
@@ -18,29 +22,30 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.username || !formData.email || !formData.password) {
-      return setErrorMessage('Please fill out all the fields.')
+      return dispatch(signInFailure('Please fill out all the fields.'))
     }
     try {
-      setLoading(true);
-      setErrorMessage(null)
+      dispatch(signInStart());
       const result = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
       const data = await result.json();
-      console.log(data);
+
       if (data.success == false) {
-        setLoading(false);
-        return setErrorMessage(data.message)
+        console.log('backedn me backcdhodi')
+        return dispatch(signInFailure(data.message))
       }
       if (result.ok) {
+        console.log('sab changa ci')
+        dispatch(signInSuccess(data))
         navigate('/home')
       }
-      setLoading(false)
     } catch (err) {
-      setLoading(false)
-      setErrorMessage(err.message)
+      console.log('catch me error')
+      console.log(err)
+      dispatch(signInFailure(err.message))
     }
   }
 
@@ -76,7 +81,8 @@ function SignUp() {
                 <Label htmlFor='username'>Your password</Label>
                 <TextInput id='password' type='password' placeholder='Enter your password' onChange={handleChange} />
               </div>
-              <Button className='bg-gradient-to-r from-purple-600 to-indigo-600 ' type='submit' disabled={loading}>{loading ? (<><Spinner size='sm' /> <span>Loading...</span></>) : 'Sign Up'}</Button>
+              <Button className='bg-gradient-to-r from-purple-600 to-indigo-600 ' type='submit' disabled={loading}>{loading ? (<span>Loading...</span>) : 'Sign Up'}</Button>
+              <OAuth />
             </form>
             <div className='flex gap-2 text-sm mt-5'>
               <span>Have an account ? </span>

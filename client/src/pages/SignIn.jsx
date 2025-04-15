@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import OAuth from '../components/OAuth';
 
 function SignIn() {
 
@@ -35,7 +36,6 @@ function SignIn() {
       });
       const data = await result.json();
       console.log(data);
-      dispatch(signInSuccess(data))
 
       if (data.success == false) {
         // setLoading(false);
@@ -43,7 +43,7 @@ function SignIn() {
         dispatch(signInFailure(data.message));
       }
       if (result.ok) {
-        // dispatch(signInSuccess(data))
+        dispatch(signInSuccess(data))
         navigate('/home')
       }
       // setLoading(false)
@@ -83,6 +83,7 @@ function SignIn() {
                 <TextInput id='password' type='password' placeholder='**********' onChange={handleChange} />
               </div>
               <Button className='bg-gradient-to-r from-purple-600 to-indigo-600 ' type='submit' disabled={loading}>{loading ? (<><Spinner size='sm' /> <span>Loading...</span></>) : 'Sign In'}</Button>
+              <OAuth />
             </form>
             <div className='flex gap-2 text-sm mt-5'>
               <span>Create a new account ? </span>

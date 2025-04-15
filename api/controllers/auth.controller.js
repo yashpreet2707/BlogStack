@@ -21,8 +21,6 @@ export const signup = async (req, res, next) => {
 
   try {
     await newUser.save();
-    console.log("saved data to mongo");
-    res.json({ message: "Signup successful!" });
   } catch (err) {
     next(err);
   }
@@ -60,5 +58,53 @@ export const signin = async (req, res, next) => {
       .json(rest);
   } catch (err) {
     next(err.message);
+  }
+};
+
+export const google = async (req, res, next) => {
+  const { name, email, googlePhotoURL } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const { password, ...rest } = user._doc;
+
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
+        .json(rest);
+    } else {
+      const generatedPass =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const hashedPassword = bcryptjs.hashSync(generatedPass, 10);
+
+      const newUser = new User({
+        username:
+          name.toLowerCase().split(" ").join("") +
+          Math.random().toString(9).slice(-4),
+        email,
+        password: hashedPassword,
+        profilePicture: googlePhotoURL,
+      });
+
+      await newUser.save();
+
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const { password: pass, ...rest } = newUser._doc;
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
+        .json(rest);
+    }
+  } catch (err) {
+    console.log("erros has occured boss : " + err);
+    next(err);
   }
 };
