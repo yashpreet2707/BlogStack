@@ -1,5 +1,5 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import OAuth from '../components/OAuth';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,8 +11,15 @@ function SignUp() {
   const dispatch = useDispatch();
 
   const { loading, error: errorMessage } = useSelector(state => state.user);
+  const { currentUser } = useSelector(state => state.user)
 
   const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/')
+    }
+  }, [currentUser])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() })

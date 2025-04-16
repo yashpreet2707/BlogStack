@@ -1,5 +1,5 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,9 +9,16 @@ function SignIn() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { currentUser } = useSelector(state => state.user)
   const { loading, error: errorMessage } = useSelector(state => state.user)
 
   const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/')
+    }
+  }, [currentUser])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
@@ -55,7 +62,7 @@ function SignIn() {
               <div className="w-20 h-18 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
                 B
               </div>
-              <span className="font-bold ml-3  dark:text-white">
+              <span className="font-bold ml-3 text-black dark:text-white">
                 Blog<span className="text-purple-600">Stack</span>
               </span>
             </div>
