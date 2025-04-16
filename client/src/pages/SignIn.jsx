@@ -21,12 +21,9 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      // return setErrorMessage('Please fill out all the fields.')
       return dispatch(signInFailure('Please fill out all the fields.'))
     }
     try {
-      // setLoading(true);
-      // setErrorMessage(null)
       dispatch(signInStart());
 
       const result = await fetch('/api/auth/signin', {
@@ -35,21 +32,15 @@ function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await result.json();
-      console.log(data);
 
       if (data.success == false) {
-        // setLoading(false);
-        // return setErrorMessage(data.message)
         dispatch(signInFailure(data.message));
       }
       if (result.ok) {
         dispatch(signInSuccess(data))
         navigate('/home')
       }
-      // setLoading(false)
     } catch (err) {
-      // setLoading(false)
-      // setErrorMessage(err.message)
       dispatch(signInFailure(err.message))
     }
   }

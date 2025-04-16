@@ -32,19 +32,14 @@ function SignUp() {
         body: JSON.stringify(formData),
       });
       const data = await result.json();
-
       if (data.success == false) {
-        console.log('backedn me backcdhodi')
         return dispatch(signInFailure(data.message))
       }
       if (result.ok) {
-        console.log('sab changa ci')
         dispatch(signInSuccess(data))
         navigate('/home')
       }
     } catch (err) {
-      console.log('catch me error')
-      console.log(err)
       dispatch(signInFailure(err.message))
     }
   }
