@@ -18,7 +18,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className='dark:text-white dark:bg-[#1E2936]'>
+      <div>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
