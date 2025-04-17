@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom"
 // import {uploadFile} from "../azure.js"
-import { updateStart, updateSuccess, updateFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice';
+import { updateStart, updateSuccess, updateFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutSuccess } from '../redux/user/userSlice';
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const DashProfile = () => {
@@ -60,8 +60,6 @@ const DashProfile = () => {
         setFormData({ ...formData, profilePicture: finalLink });
     }, [finalLink])
 
-    console.log(formData)
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (Object.keys(formData).length === 0) {
@@ -108,6 +106,25 @@ const DashProfile = () => {
             dispatch(deleteUserFailure(err.message))
         }
     }
+
+    const handleSignOut = async () => {
+        try {
+            const result = await fetch('/api/user/signout', {
+                method: 'POST',
+
+            })
+            const data = await result.json();
+            if (!result.ok) {
+                console.log(data.message);
+            } else {
+                dispatch(signOutSuccess());
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+
     return (
         <div className='h-full'>
             <h1 className='pt-7 mb-5 text-center font-semibold text-3xl'>Profile</h1>
@@ -126,7 +143,7 @@ const DashProfile = () => {
             </form>
             <div className='w-[70vw] sm:w-[40vw] md:w-[30vw] mx-auto text-red-500 flex justify-between mt-5 text-lg'>
                 <span onClick={() => setShowModal(true)} className='cursor-pointer'>Delete Account</span>
-                <span className='cursor-pointer'>Sign Out</span>
+                <span onClick={handleSignOut} className='cursor-pointer'>Sign Out</span>
             </div>
             <div className='w-[70vw] sm:w-[40vw] md:w-[30vw] mx-auto mt-5'>
                 {userUpdateSuccess && <Alert color='success'>{userUpdateSuccess}</Alert>}
@@ -150,4 +167,4 @@ const DashProfile = () => {
     )
 }
 
-export default DashProfile
+export default DashProfile 
