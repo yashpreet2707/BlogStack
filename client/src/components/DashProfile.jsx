@@ -8,11 +8,12 @@ const DashProfile = () => {
 
     const dispatch = useDispatch();
 
+    const { loading } = useSelector(state => state.user);
     const { currentUser } = useSelector(state => state.user);
 
     const [imageFileURL, setImageFileURL] = useState(null);
     const [finalLink, setFinalLink] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [imgLoading, setImgLoading] = useState(false);
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({})
     const [userUpdateSuccess, setUserUpdateSuccess] = useState(null)
@@ -25,7 +26,7 @@ const DashProfile = () => {
         if (file) {
             setImageFileURL(URL.createObjectURL(file))
         }
-        setLoading(true);
+        setImgLoading(true);
 
         try {
             const data = new FormData();
@@ -40,7 +41,7 @@ const DashProfile = () => {
 
             const uploadedImageURL = await res.json();
             setFinalLink(uploadedImageURL.url);
-            setLoading(false);
+            setImgLoading(false);
         } catch (err) {
             setError(err.message);
         }
@@ -90,13 +91,13 @@ const DashProfile = () => {
                 <FileInput className='hidden w-[70vw] sm:w-[40vw] md:w-[30vw] mx-auto mt-5' type="file" accept='image/*' onChange={handleImageUpload} ref={filePickerRef} />
                 <div className='w-32 h-32 self-center my-2' onClick={() => filePickerRef.current.click()}>
                     <img src={imageFileURL || currentUser.profilePicture} alt="user-img" className='rounded-full w-full h-full border-8 border-[lightgray] object-cover' />
-                    {loading && <div className='ml-6'>Loading...</div>}
+                    {imgLoading && <div className='ml-6'>Loading...</div>}
                 </div>
                 <div className='w-[70vw] sm:w-[40vw] md:w-[30vw] mx-auto flex flex-col gap-4'>
                     <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser?.username} onChange={handleChange} />
                     <TextInput type='email' id='email' placeholder='username' defaultValue={currentUser?.email} onChange={handleChange} />
                     <TextInput type='password' id='password' placeholder='password' onChange={handleChange} />
-                    <Button type='submit' className='bg-gradient-to-r from-purple-600 to-indigo-600'>Update</Button>
+                    <Button type='submit' className='bg-gradient-to-r from-purple-600 to-indigo-600' disabled={loading}>{loading ? "Loading..." : "Update"}</Button>
                 </div>
             </form>
             <div className='w-[70vw] sm:w-[40vw] md:w-[30vw] mx-auto text-red-500 flex justify-between mt-5 text-lg'>

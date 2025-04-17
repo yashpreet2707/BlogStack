@@ -9,8 +9,8 @@ import { toggleTheme } from '../redux/theme/themeSlice';
 const Header = () => {
     const path = useLocation().pathname;
     const { currentUser } = useSelector(state => state.user);
-    const {theme} = useSelector(state=>state.theme)
-    const dispatch = useDispatch() ;
+    const { theme } = useSelector(state => state.theme)
+    const dispatch = useDispatch();
 
     return (
         <Navbar fluid className='border-b-4 h-16'>
@@ -29,7 +29,7 @@ const Header = () => {
             </form>
             <Button className='w-15 h-10 lg:hidden' color='gray'><AiOutlineSearch size={50} /></Button>
             <div className='flex gap-2 md:order-2'>
-                <Button className='w-12 h-10 hidden sm:inline' color='gray' pill onClick={()=> dispatch(toggleTheme())}>
+                <Button className='w-12 h-10 hidden sm:inline' color='gray' pill onClick={() => dispatch(toggleTheme())}>
                     {(theme === 'dark') ? <FaMoon /> : <FaSun />}
                 </Button>
                 {currentUser ? (
