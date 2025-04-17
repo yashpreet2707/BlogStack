@@ -1,56 +1,43 @@
-import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
+import { Alert, Button, Label, TextInput } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import OAuth from '../components/OAuth';
-import { useDispatch, useSelector } from 'react-redux';
-import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 
 function SignUp() {
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const { loading, error: errorMessage } = useSelector(state => state.user);
-  const { currentUser } = useSelector(state => state.user)
-
   const [formData, setFormData] = useState({});
-
-  useEffect(() => {
-    if (currentUser) {
-      navigate('/')
-    }
-  }, [currentUser])
-
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
-  }
-
-
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.username || !formData.email || !formData.password) {
-      return dispatch(signInFailure('Please fill out all the fields.'))
+      return setErrorMessage('Please fill out all fields.');
     }
     try {
-      dispatch(signInStart());
-      const result = await fetch('/api/auth/signup', {
+      setLoading(true);
+      setErrorMessage(null);
+      const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      const data = await result.json();
-      if (data.success == false) {
-        return dispatch(signInFailure(data.message))
+      const data = await res.json();
+      if (data.success === false) {
+        return setErrorMessage(data.message);
       }
-      if (result.ok) {
-        dispatch(signInSuccess(data))
-        navigate('/home')
+      setLoading(false);
+      if (res.ok) {
+        navigate('/sign-in');
       }
-    } catch (err) {
-      dispatch(signInFailure(err.message))
+    } catch (error) {
+      setErrorMessage(error.message);
+      setLoading(false);
     }
-  }
-
+  };
   return (
     <div className='min-h-[100vh] sm:min-h-[67vh] lg:min-h-[105vh] flex justify-center items-center -mt-15'>
       <div>
