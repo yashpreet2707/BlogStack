@@ -16,6 +16,7 @@ import SignUp from "./pages/SignUp"
 import Dashboard from "./pages/Dashboard"
 import Projects from "./pages/Projects"
 import CreatePost from './pages/CreatePost'
+import UpdatePost from './pages/UpdatePost'
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
         </Route>
         <Route element={<OnlyAdminPrivateRoute />} >
           <Route path='/create-post' element={<CreatePost />} />
+          <Route path='/update-post/:postId' element={<UpdatePost />} />
         </Route>
         <Route path="/Projects" element={<Projects />} />
       </Routes>
