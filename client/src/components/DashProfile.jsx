@@ -20,7 +20,6 @@ const DashProfile = () => {
     const [localError, setLocalError] = useState("");
     const [formData, setFormData] = useState({})
     const [userUpdateSuccess, setUserUpdateSuccess] = useState(null)
-
     const [showModal, setShowModal] = useState(false);
 
     const filePickerRef = useRef();
