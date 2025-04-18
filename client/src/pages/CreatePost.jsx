@@ -1,10 +1,37 @@
 import React, { useState } from 'react'
-import { TextInput, Select, FileInput, Button } from "flowbite-react"
+import { TextInput, Select, FileInput, Button, Alert } from "flowbite-react"
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
 const CreatePost = () => {
-    const [value, setValue] = useState("");
+    const [file, setFile] = useState(null)
+    const [imgLoading, setImgLoading] = useState(false)
+    const [formData, setFormData] = useState({});
+
+    const handleUploadImage = async () => {
+        try {
+            if (!file) {
+                return;
+            }
+            setImgLoading(true);
+            const data = new FormData();
+            data.append("file", file);
+            data.append("upload_preset", "BlogStack");
+            data.append("cloud_name", "dhr2ijbmb");
+
+            const res = await fetch("https://api.cloudinary.com/v1_1/dhr2ijbmb/image/upload", {
+                method: "PUT",
+                body: data,
+            })
+
+            const uploadedImageURL = await res.json();
+            setImgLoading(false);
+            setFormData({ ...formData, image: uploadedImageURL.url })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     return (
         <div className='p-3 max-w-3xl mx-auto min-h-screen'>
@@ -19,12 +46,15 @@ const CreatePost = () => {
                         <option value="nextjs">Next.js</option>
                     </Select>
                 </div>
-                <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
-                    <FileInput type='file' accept='image/*' />
-                    <Button type='button' className='bg-gradient-to-r from-purple-600 to-indigo-600 whitespace-nowrap' >Upload Image</Button>
+                <div className='flex gap-4 items-center justify-between border-4 border-purple-600 border-dotted p-3'>
+                    <FileInput type='file' accept='image/*' onChange={(e) => setFile(e.target.files[0])} />
+                    <Button onClick={handleUploadImage} type='button' className='bg-gradient-to-r from-purple-600 to-indigo-600 whitespace-nowrap' disabled={imgLoading}>{imgLoading ? "Uploading..." : "Upload Image"}</Button>
                 </div>
-                <ReactQuill required className='h-72 mb-12' theme='snow' value={value} onchange={(e) => setValue(e.target.value)} placeholder='Write something...' />
-                <Button type='button' className='bg-gradient-to-r from-purple-600 to-indigo-600 whitespace-nowrap' >Publish</Button>
+                {formData.image && (
+                    <img src={formData.image} alt="upload" className='w-full h-72 object-cover' />
+                )}
+                <ReactQuill required className='h-72 mb-12' theme='snow' placeholder='Write something...' />
+                <Button type='button' className='bg-gradient-to-r from-purple-600 to-indigo-600 whitespace-nowrap' disabled={imgLoading} >Publish</Button>
             </form>
         </div>
     )
