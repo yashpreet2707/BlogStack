@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    title: {
+    username: {
       type: String,
       required: true,
       unique: true,
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
     isAdmin: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   {
     timestamps: true, // Automatically manage `createdAt` and `updatedAt` fields
