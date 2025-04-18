@@ -1,7 +1,7 @@
 import { Alert, Button, FileInput, TextInput, Modal, ModalBody, ModalHeader } from 'flowbite-react';
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 // import {uploadFile} from "../azure.js"
 import { updateStart, updateSuccess, updateFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutSuccess } from '../redux/user/userSlice';
 import { HiOutlineExclamationCircle } from "react-icons/hi";
@@ -132,13 +132,19 @@ const DashProfile = () => {
                 <FileInput className='hidden w-[70vw] sm:w-[40vw] md:w-[30vw] mx-auto mt-5' type="file" accept='image/*' onChange={handleImageUpload} ref={filePickerRef} />
                 <div className='w-32 h-32 self-center my-2' onClick={() => filePickerRef.current.click()}>
                     <img src={imageFileURL || currentUser.profilePicture} alt="user-img" className='rounded-full w-full h-full border-8 border-[lightgray] object-cover' />
-                    {imgLoading && <div className='ml-6'>Loading...</div>}
                 </div>
                 <div className='w-[70vw] sm:w-[40vw] md:w-[30vw] mx-auto flex flex-col gap-4'>
                     <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser?.username} onChange={handleChange} />
                     <TextInput type='email' id='email' placeholder='username' defaultValue={currentUser?.email} onChange={handleChange} />
                     <TextInput type='password' id='password' placeholder='password' onChange={handleChange} />
-                    <Button type='submit' className='bg-gradient-to-r from-purple-600 to-indigo-600' disabled={loading}>{loading ? "Loading..." : "Update"}</Button>
+                    <Button type='submit' className='bg-gradient-to-r from-purple-600 to-indigo-600' disabled={loading || imgLoading}>{loading ? "Loading..." : "Update"}</Button>
+                    {
+                        currentUser.isAdmin && (
+                            <Link to='/create-post'>
+                                <Button type='button' className='w-full bg-gradient-to-r from-purple-600 to-indigo-600' >Create a post</Button>
+                            </Link>
+                        )
+                    }
                 </div>
             </form>
             <div className='w-[70vw] sm:w-[40vw] md:w-[30vw] mx-auto text-red-500 flex justify-between mt-5 text-lg'>
