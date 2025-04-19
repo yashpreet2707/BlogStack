@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Button, Spinner } from 'flowbite-react'
 import CallToAction from '../components/CallToAction'
+import CommentSection from '../components/CommentSection'
 const PostPage = () => {
 
     const { postSlug } = useParams();
@@ -10,7 +11,6 @@ const PostPage = () => {
     const [error, setError] = useState(false)
     const [post, setPost] = useState(null)
 
-    console.log(post)
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -46,7 +46,7 @@ const PostPage = () => {
             <img src={post && post.image} alt={post && post.title} className='w-full max-h-[600px] object-cover  mt-5' />
             <div className='flex justify-between items-center p-3 mt-5 border-b border-slate-300 mx-auto w-full max-w-2xl text-xs'>
                 <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
-                <spanc className='italic'>{post && (post.content.length / 1000).toFixed(0)} min read</spanc>
+                <span className='italic'>{post && (post.content.length / 1000).toFixed(0)} min read</span>
             </div>
             <div dangerouslySetInnerHTML={{ __html: post && post.content }} className='p-3 max-w-2xl mx-auto w-full post-content'>
 
@@ -54,6 +54,7 @@ const PostPage = () => {
             <div>
                 <CallToAction />
             </div>
+            <CommentSection postId={post && post._id} />
         </main>
     )
 }

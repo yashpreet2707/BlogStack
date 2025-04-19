@@ -7,6 +7,7 @@ import Header from './components/Header'
 import FooterComponent from './components/Footer'
 import PrivateRoute from "./components/PrivateRoute"
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute'
+import ScrollToTop from './components/ScrollToTop'
 
 //pages
 import Home from "./pages/Home"
@@ -23,6 +24,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
