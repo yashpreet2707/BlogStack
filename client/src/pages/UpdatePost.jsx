@@ -62,9 +62,10 @@ const UpdatePost = () => {
         }
     }
 
+    console.log(formData)
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("handle submit called.")
         try {
             const result = await fetch(`/api/post/updatepost/${formData._id}/${currentUser._id}`, {
                 method: 'PUT',
@@ -75,6 +76,7 @@ const UpdatePost = () => {
             })
             const data = await result.json();
             if (!result.ok) {
+                console.log(data.message)
                 setPublishError(data.message)
             } else {
                 setPublishError(null)
@@ -85,14 +87,19 @@ const UpdatePost = () => {
         }
     }
 
-    console.log(publishError)
+
+    if (!formData.title) {
+        return <div className='flex justify-center items-center h-screen'>
+            <h1>Loading...</h1>
+        </div>
+    }
 
     return (
         <div className='p-3 max-w-3xl mx-auto min-h-screen'>
             <h1 className='text-center text-3xl my-7 font-semibold'>Update Post</h1>
             <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                 <div className='flex flex-col gap-4 sm:flex-row justify-between'>
-                    <TextInput onChange={(e) => setFormData({ ...formData, title: e.target.value })} value={formData.title} className='flex-1' id='title' placeholder='Title' type='text' required />
+                    <TextInput onChange={(e) => setFormData({ ...formData, title: e.target.value })} value={formData?.title} className='flex-1' id='title' placeholder='Title' type='text' required />
                     <Select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} >
                         <option value="uncategorized">Select a category</option>
                         <option value="javascript">JavaScript</option>
