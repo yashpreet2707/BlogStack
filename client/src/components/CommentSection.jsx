@@ -1,13 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Alert, Button, Textarea } from 'flowbite-react'
+import { Comment } from './Comment'
+
 const CommentSection = ({ postId }) => {
 
     const { currentUser } = useSelector(state => state.user)
 
     const [comment, setComment] = useState('')
     const [commentError, setCommentError] = useState(null)
+    const [comments, setComments] = useState([])
+
+
+    useEffect(() => {
+        const getComments = async () => {
+            try {
+                const res = await fetch(`/api/comment/getPostComments/${postId}`)
+                const data = await res.json();
+
+                if (res.ok) {
+                    setCommentError(null)
+                    setComment('')
+                    setComments(data)
+                } else {
+                    console.log(data.message)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getComments();
+    }, [postId])
 
 
     const handleSubmit = async (e) => {
@@ -43,7 +67,7 @@ const CommentSection = ({ postId }) => {
     }
 
     return (
-        <div className='max-w-2xl sm:ml-52'>
+        <div className='max-w-2xl sm:ml-16 md:ml-52'>
             {currentUser ? (
                 <div className='flex items-center gap-1 my-5 text-gray-500 text-xs mx-auto'>
                     <p>Signed in as:</p>
@@ -63,8 +87,17 @@ const CommentSection = ({ postId }) => {
                         <p className='text-xs text-gray-500'>{200 - comment.length} characters remaining.</p>
                         <Button className='bg-gradient-to-r from-purple-600 to-indigo-600' type='submit' color='gray' size='xs'>Comment</Button>
                     </div>
+                    {commentError && <Alert color='failure'>{commentError}</Alert>}
                 </form>
-                {commentError && <Alert color='failure'>{commentError}</Alert>}
+            )}
+            {(comments.length === 0) ? <p className='text-sm my-5'>No comments yet.</p> : (
+                <>
+                    <div className='flex items-center gap-1 text-sm my-5'>
+                        <p>Comments: </p>
+                        <div className='border brder-gray-500 py-1 px-2 rounded-sm'>{comments.length}</div>
+                    </div>
+                    {comments.map(comment => <Comment key={comment._id} comment={comment} />)}
+                </>
             )}
         </div>
     )
