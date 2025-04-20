@@ -25,7 +25,9 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Header />
+      <div className='h-16'>
+        <Header />
+      </div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />

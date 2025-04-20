@@ -4,7 +4,7 @@ import { FaThumbsUp } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
 import { Button, Textarea } from 'flowbite-react'
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
     const { currentUser } = useSelector(state => state.user)
 
     const [user, setUser] = useState(null);
@@ -44,14 +44,15 @@ const Comment = ({ comment, onLike, onEdit }) => {
                 })
             })
 
-            if(res.ok) {
+            if (res.ok) {
                 setIsEditing(false);
-                onEdit(comment?._id, editedContent) ;
+                onEdit(comment?._id, editedContent);
             }
         } catch (error) {
             console.log(error.message)
         }
     }
+
 
     if (!comment) return null;
     return (
@@ -86,7 +87,10 @@ const Comment = ({ comment, onLike, onEdit }) => {
                             </button>
                             <p className='text-gray-400'>{comment.numberOfLikes > 0 && comment.numberOfLikes} {comment.numberOfLikes === 1 && 'like'} {comment.numberOfLikes > 1 && 'likes'}</p>
                             {currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) && (
-                                <button onClick={() => handleEdit(comment?._id)} type='button' className='text-gray-400 hover:text-blue-500'>Edit</button>
+                                <>
+                                    <button onClick={() => handleEdit(comment?._id)} type='button' className='text-gray-400 hover:text-blue-500'>Edit</button>
+                                    <button onClick={() => onDelete(comment?._id)} type='button' className='text-gray-400 hover:text-blue-500'>Delete</button>
+                                </>
                             )}
                         </div>
                     </>

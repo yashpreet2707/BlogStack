@@ -62,6 +62,7 @@ const DashPosts = () => {
                 console.log(data.message)
             } else {
                 setUserPosts((prev) => prev.filter(post => post._id !== postIdToDelete))
+                setShowModal(false)
             }
         } catch (error) {
             console.log(error)

@@ -32,7 +32,7 @@ const Header = () => {
     }
 
     return (
-        <Navbar fluid className='border-b-4 h-16'>
+        <Navbar fluid className='border-b-4 h-16 fixed top-0 left-0 right-0 z-50 '>
             <Link to="/" className='self-center whitespace-nowrap text-xl ml-10'>
                 <div className='flex items-center'>
                     <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">
@@ -69,7 +69,7 @@ const Header = () => {
                 }
                 <NavbarToggle />
             </div >
-            <NavbarCollapse>
+            <NavbarCollapse className='bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700  mt-2'>
                 <NavbarLink active={path === '/'} as={'div'}>
                     <Link to='/'>Home</Link>
                 </NavbarLink>
