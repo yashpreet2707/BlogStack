@@ -15,7 +15,7 @@ const DashProfile = () => {
     const { currentUser, error } = useSelector(state => state.user);
 
     const [imageFileURL, setImageFileURL] = useState(null);
-    const [finalLink, setFinalLink] = useState('');
+    const [finalLink, setFinalLink] = useState(currentUser?.profilePicture || null);
     const [imgLoading, setImgLoading] = useState(false);
     const [localError, setLocalError] = useState("");
     const [formData, setFormData] = useState({})

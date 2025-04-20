@@ -3,7 +3,7 @@ import React from 'react'
 
 const CallToAction = () => {
     return (
-        <div className='flex flex-col sm:flex-row justify-evenly gap-4 p-3 text-center border border-teal-600 border-dotted rounded-xl my-5 sm:my-0'>
+        <div className='flex flex-col sm:flex-row justify-evenly gap-4 p-3 text-center border border-teal-600 border-dotted rounded-xl my-5 sm:my-0 py-5'>
             <div className='flex-1 flex flex-col justify-center'>
                 <h2 className='text-2xl font-bold'>Did you like this Project ?</h2>
                 <p className='text-lg text-gray-500 my-2'>If you did, please leave a star on the repo.</p>

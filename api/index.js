@@ -28,8 +28,8 @@ app.listen(port, () => console.log(`Server is running at localhost:${port}`));
 app.get("/", (req, res) => res.send("Hello buddy!")); // testing
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/post/", postRoutes);
-app.use("/api/comment/", commentRoutes);
+app.use("/api/post", postRoutes);
+app.use("/api/comment", commentRoutes);
 
 // middlewares
 app.use((err, req, res, next) => {

@@ -1,16 +1,41 @@
+import { Textarea, Button, Alert } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { Alert, Button, Textarea } from 'flowbite-react'
-import { Comment } from './Comment'
+import { useNavigate, Link } from 'react-router-dom'
+import Comment from './Comment'
 
 const CommentSection = ({ postId }) => {
 
     const { currentUser } = useSelector(state => state.user)
+    const navigate = useNavigate()
 
     const [comment, setComment] = useState('')
-    const [commentError, setCommentError] = useState(null)
+    const [commentError, setCommentError] = useState('')
     const [comments, setComments] = useState([])
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (comment.length > 200) return;
+        try {
+            const res = await fetch('/api/comment/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content: comment, postId, userId: currentUser._id })
+            })
+
+            const data = await res.json();
+
+            if (res.ok) {
+                setComment('')
+                setCommentError(null)
+                setComments([data, ...comments])
+            }
+        } catch (error) {
+            setCommentError(error.message)
+        }
+    }
 
 
     useEffect(() => {
@@ -20,87 +45,91 @@ const CommentSection = ({ postId }) => {
                 const data = await res.json();
 
                 if (res.ok) {
-                    setCommentError(null)
-                    setComment('')
-                    setComments(data)
-                } else {
-                    console.log(data.message)
+                    setComments(data);
                 }
             } catch (error) {
-                console.log(error)
+                console.log(error.message);
             }
         }
         getComments();
     }, [postId])
 
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-
-        if (comment.length > 200) return;
-
+    const handleLike = async (commentId) => {
         try {
-            const res = await fetch(`/api/comment/create`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    content: comment,
-                    postId,
-                    userId: currentUser._id,
-                })
+            if (!currentUser) {
+                alert('You must be signed in to like a comment')
+                navigate('/sign-in')
+                return;
+            }
+            const res = await fetch(`/api/comment/likecomment/${commentId}`, {
+                method: 'PUT',
             })
-
-            const data = await res.json();
-
             if (res.ok) {
-                setComment('')
-                setCommentError(null)
-            } else {
-                setCommentError(data.message)
+                const data = await res.json();
+                setComments(comments.map(comment =>
+                    comment._id === commentId
+                        ? { ...comment, likes: data.likes, numberOfLikes: data.likes.length }
+                        : comment
+                ));
             }
         } catch (error) {
-            setCommentError(error.message)
+            console.log("yahan FRONTEND likes me error catch ho rahi hai");
+            console.log(error.message)
         }
+    }
 
+    const handleEdit = async (commentId, editedContent) => {
+        try {
+            setComments(comments.map(comment => comment._id === commentId ? { ...comment, content: editedContent } : comment))
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 
     return (
-        <div className='max-w-2xl sm:ml-16 md:ml-52'>
+        <div className='max-w-2xl sm:w-2xl sm:mx-auto p-3'>
             {currentUser ? (
-                <div className='flex items-center gap-1 my-5 text-gray-500 text-xs mx-auto'>
-                    <p>Signed in as:</p>
-                    <img className='h-5 w-5 object-cover rounded-full' src={currentUser && currentUser.profilePicture} alt="" />
-                    <Link to='/dashboard?tab=profile' className='text-xs text-cyan-600 hover:underline'>@{currentUser && currentUser.username}</Link>
+                <div className='flex justify-center items-center gap-1 my-5 text-gray-500 text-sm'>
+                    <p>Signed in as: </p>
+                    <img className='h-5 w-5 object-cover rounded-full' src={currentUser && currentUser?.profilePicture} alt="" />
+                    <Link to={'/dashboard?tab=profile'} className='text-xs text-cyan-500 text-underline'>
+                        @{currentUser?.username}
+                    </Link>
                 </div>
             ) : (
-                <div className='text-sm text-teal-500 my-5 flex gap-1'>
-                    <p>You must be signed in to leave a comment.</p>
-                    <Link to='/sign-in' className='text-blue-500 hover:underline'>Sign In</Link>
+                <div className='text-sm my-5 flex gap-1'>
+                    You must be signed in to comment
+                    <Link to='/sign-in' className='text-blue-500'>Sign In</Link>
                 </div>
             )}
             {currentUser && (
-                <form onSubmit={handleSubmit} className='border border-teal-500 rounded-lg p-3'>
-                    <Textarea placeholder='Add a comment...' rows='3' maxLength={200} required value={comment} onChange={e => setComment(e.target.value)} />
-                    <div className='flex justify-between items-center mt-5'>
-                        <p className='text-xs text-gray-500'>{200 - comment.length} characters remaining.</p>
-                        <Button className='bg-gradient-to-r from-purple-600 to-indigo-600' type='submit' color='gray' size='xs'>Comment</Button>
-                    </div>
-                    {commentError && <Alert color='failure'>{commentError}</Alert>}
-                </form>
+                <div>
+                    <form onSubmit={handleSubmit} className='border border-teal-500 rounded-md p-3 w-full'>
+                        <Textarea placeholder='Add a comment...' rows='3' cols='2' maxLength={200} onChange={e => setComment(e.target.value)} value={comment} />
+                        <div className='flex justify-between items-center mt-5'>
+                            <p className='text-gray-500 text-sm'>{200 - comment.length} characters remaining</p>
+                            <Button type='submit' className='bg-gradient-to-r from-purple-600 to-indigo-600 ' color='gray' size='xs'>Comment</Button>
+                        </div>
+                    </form>
+                    {commentError && <Alert className='mt-5' color='red'>{commentError}</Alert>}
+                </div>
             )}
-            {(comments.length === 0) ? <p className='text-sm my-5'>No comments yet.</p> : (
+            {comments.length === 0 ? (
+                <p className='text-sm my-5'>No comments yet!</p>
+            ) : (
                 <>
-                    <div className='flex items-center gap-1 text-sm my-5'>
-                        <p>Comments: </p>
-                        <div className='border brder-gray-500 py-1 px-2 rounded-sm'>{comments.length}</div>
+                    <div className='flex items-center text-sm my-5 gap-1'>
+                        <p>Comments</p>
+                        <div className='border border-gray-400 py-1 px-2 rounded-sm'>
+                            <p>{comments.length}</p>
+                        </div>
                     </div>
-                    {comments.map(comment => <Comment key={comment._id} comment={comment} />)}
+                    {comments && comments.map((comment, index) => <Comment key={comment && comment._id || index} comment={comment} onLike={handleLike} onEdit={handleEdit} />)}
                 </>
             )}
         </div>
-    )
+    );
 }
 
 export default CommentSection

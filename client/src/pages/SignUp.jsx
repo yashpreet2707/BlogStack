@@ -70,7 +70,7 @@ function SignUp() {
                 <Label htmlFor='username'>Your password</Label>
                 <TextInput id='password' type='password' placeholder='Enter your password' onChange={handleChange} />
               </div>
-              <Button className='bg-gradient-to-r from-purple-600 to-indigo-600 ' type='submit' disabled={loading}>{loading ? (<span>Loading...</span>) : 'Sign Up'}</Button>
+              <Button className='bg-gradient-to-r from-purple-600 to-indigo-600' type='submit' disabled={loading}>{loading ? (<span>Loading...</span>) : 'Sign Up'}</Button>
               <OAuth />
             </form>
             <div className='flex gap-2 text-sm mt-5'>
