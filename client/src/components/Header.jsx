@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, Button, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Navbar, NavbarCollapse, NavbarLink, NavbarToggle, TextInput } from "flowbite-react";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from "react-icons/ai"
 import { FaMoon, FaSun } from "react-icons/fa"
 import { useSelector, useDispatch } from "react-redux"
@@ -9,10 +9,24 @@ import { signOutSuccess } from '../redux/user/userSlice';
 
 const Header = () => {
     const path = useLocation().pathname;
+    const navigate = useNavigate();
     const { currentUser } = useSelector(state => state.user);
     const { theme } = useSelector(state => state.theme)
+
+    const [searchTerm, setSearchTerm] = useState('')
+    const location = useLocation();
+
     const dispatch = useDispatch();
 
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search)
+        const searchTermFromUrl = urlParams.get('searchTerm')
+
+        if (searchTermFromUrl) {
+            setSearchTerm(searchTermFromUrl)
+        }
+    }, [location.search])
 
     const handleSignOut = async () => {
         try {
@@ -31,6 +45,16 @@ const Header = () => {
         }
     }
 
+    const handleSearch = (e) => {
+        e.preventDefault();
+        const urlParams = new URLSearchParams(window.location.search)
+        urlParams.set('searchTerm', searchTerm)
+
+        const searchQuery = urlParams.toString();
+
+        navigate(`/search?${searchQuery}`)
+    }
+
     return (
         <Navbar fluid className='border-b-4 h-16 fixed top-0 left-0 right-0 z-50 '>
             <Link to="/" className='self-center whitespace-nowrap text-xl ml-10'>
@@ -43,8 +67,8 @@ const Header = () => {
                     </span>
                 </div>
             </Link>
-            <form>
-                <TextInput type='text' placeholder='Search...' rightIcon={AiOutlineSearch} className='hidden lg:inline' />
+            <form onSubmit={handleSearch}>
+                <TextInput type='text' placeholder='Search...' rightIcon={AiOutlineSearch} className='hidden lg:inline' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </form>
             <Button className='w-15 h-10 lg:hidden' color='gray'><AiOutlineSearch size={50} /></Button>
             <div className='flex gap-2 md:order-2'>
@@ -69,7 +93,7 @@ const Header = () => {
                 }
                 <NavbarToggle />
             </div >
-            <NavbarCollapse className='bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700  mt-2'>
+            <NavbarCollapse className='bg-white dark:bg-gray-800 mt-2'>
                 <NavbarLink active={path === '/'} as={'div'}>
                     <Link to='/'>Home</Link>
                 </NavbarLink>
