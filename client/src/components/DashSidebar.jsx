@@ -41,6 +41,9 @@ const DashSidebar = () => {
         <Sidebar className='w-full border-r-2 border-gray-600'>
             <SidebarItems>
                 <SidebarItemGroup className='flex flex-col gap-1'>
+                    {currentUser?.isAdmin && <Link to='/dashboard?tab=dash'>
+                        <SidebarItem active={tab === 'dash'} icon={HiDocumentText} as='div'>Dashboard</SidebarItem>
+                    </Link>}
                     <Link to='/dashboard?tab=profile'>
                         <SidebarItem active={tab === 'profile'} icon={HiUser} label={currentUser?.isAdmin ? "Admin" : "User"} labelColor='dark' as='div'>Profile</SidebarItem>
                     </Link>
