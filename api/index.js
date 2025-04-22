@@ -6,11 +6,17 @@ import authRoutes from "./routes/auth.route.js";
 import postRoutes from "./routes/post.route.js";
 import commentRoutes from "./routes/comment.route.js";
 import cookieParser from "cookie-parser";
+import cors from 'cors'
 
 const app = express();
 const port = 3000;
 
 dotenv.config();
+
+app.use(cors({
+  origin: ['https://blog-stack-zeta.vercel.app', 'http://localhost:5173'],
+  credentials:true,   
+}))
 
 // connection to database
 mongoose
