@@ -7,7 +7,6 @@ import postRoutes from "./routes/post.route.js";
 import commentRoutes from "./routes/comment.route.js";
 import cookieParser from "cookie-parser";
 
-import path from "path";
 
 const app = express();
 const port = 3000;
@@ -19,8 +18,6 @@ mongoose
   .connect(process.env.MONGO)
   .then(() => console.log("MongoDB is connected."))
   .catch((err) => console.log(err));
-
-const __dirname = path.resolve();
 
 // middlewares
 app.use(express.json());
@@ -35,11 +32,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
 
-app.use(express.static(path.join(__dirname, "/client/dist")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-});
 
 // middlewares
 app.use((err, req, res, next) => {
