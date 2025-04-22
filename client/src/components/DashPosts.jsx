@@ -7,6 +7,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 const DashPosts = () => {
 
     const { currentUser } = useSelector((state) => state.user)
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
 
     const [userPosts, setUserPosts] = useState([]);
     const [showMore, setShowMore] = useState(true);
@@ -16,7 +17,7 @@ const DashPosts = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`)
+                const res = await fetch(`${BASE_URL}/api/post/getposts?userId=${currentUser._id}`)
                 const data = await res.json()
 
                 if (res.ok) {
@@ -39,7 +40,7 @@ const DashPosts = () => {
     const handleShowMore = async () => {
         const startIndex = userPosts.length;
         try {
-            const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`)
+            const res = await fetch(`${BASE_URL}/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`)
             const data = await res.json();
             if (res.ok) {
                 setUserPosts((prev) => [...prev, ...data.posts])
@@ -54,7 +55,7 @@ const DashPosts = () => {
 
     const handleDeletePost = async () => {
         try {
-            const result = await fetch(`/api/post/deletepost/${postIdToDelete}/${currentUser._id}`, {
+            const result = await fetch(`${BASE_URL}/api/post/deletepost/${postIdToDelete}/${currentUser._id}`, {
                 method: 'DELETE',
             })
             const data = await result.json();

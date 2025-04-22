@@ -8,6 +8,7 @@ import { FaCheck, FaTimes } from "react-icons/fa";
 const DashComments = () => {
 
     const { currentUser } = useSelector((state) => state.user)
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
 
     const [comments, setComments] = useState([]);
     const [showMore, setShowMore] = useState(true);
@@ -17,7 +18,7 @@ const DashComments = () => {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const res = await fetch(`/api/comment/getcomments`)
+                const res = await fetch(`${BASE_URL}/api/comment/getcomments`)
                 const data = await res.json()
 
                 if (res.ok) {
@@ -40,7 +41,7 @@ const DashComments = () => {
     const handleShowMore = async () => {
         const startIndex = comments.length;
         try {
-            const res = await fetch(`/api/comment/getcomments?startIndex=${startIndex}`)
+            const res = await fetch(`${BASE_URL}/api/comment/getcomments?startIndex=${startIndex}`)
             const data = await res.json();
             if (res.ok) {
                 setComments((prev) => [...prev, ...data.comments])
@@ -55,7 +56,7 @@ const DashComments = () => {
 
     const handleDeleteComment = async () => {
         try {
-            const result = await fetch(`/api/comment/deletecomment/${commentIdToDelete}`, {
+            const result = await fetch(`${BASE_URL}/api/comment/deletecomment/${commentIdToDelete}`, {
                 method: 'DELETE',
             })
             const data = await result.json()

@@ -6,6 +6,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const UpdatePost = () => {
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
+
 
     const navigate = useNavigate();
     const { postId } = useParams();
@@ -21,7 +23,7 @@ const UpdatePost = () => {
     useEffect(() => {
         try {
             const fetchPost = async () => {
-                const result = await fetch(`/api/post/getposts?postId=${postId}`);
+                const result = await fetch(`${BASE_URL}/api/post/getposts?postId=${postId}`);
                 const data = await result.json();
 
                 if (!result.ok) {
@@ -67,7 +69,7 @@ const UpdatePost = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const result = await fetch(`/api/post/updatepost/${formData._id}/${currentUser._id}`, {
+            const result = await fetch(`${BASE_URL}/api/post/updatepost/${formData._id}/${currentUser._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

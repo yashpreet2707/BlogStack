@@ -10,6 +10,7 @@ const DashProfile = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
 
     const { loading } = useSelector(state => state.user);
     const { currentUser, error } = useSelector(state => state.user);
@@ -66,7 +67,7 @@ const DashProfile = () => {
         }
         try {
             dispatch(updateStart());
-            const result = await fetch(`/api/user/update/${currentUser._id}`, {
+            const result = await fetch(`${BASE_URL}/api/user/update/${currentUser._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -90,7 +91,7 @@ const DashProfile = () => {
         setShowModal(false);
         try {
             dispatch(deleteUserStart());
-            const result = await fetch(`/api/user/delete/${currentUser._id}`, {
+            const result = await fetch(`${BASE_URL}/api/user/delete/${currentUser._id}`, {
                 method: 'DELETE',
             })
             const data = await result.json();
@@ -108,7 +109,7 @@ const DashProfile = () => {
 
     const handleSignOut = async () => {
         try {
-            const result = await fetch('/api/user/signout', {
+            const result = await fetch(`${BASE_URL}/api/user/signout`, {
                 method: 'POST',
 
             })

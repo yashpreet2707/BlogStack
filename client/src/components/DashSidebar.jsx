@@ -8,6 +8,7 @@ const DashSidebar = () => {
     const location = useLocation()
     const [tab, setTab] = useState('');
     const dispatch = useDispatch();
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
 
     const { currentUser } = useSelector(state => state.user);
 
@@ -22,7 +23,7 @@ const DashSidebar = () => {
 
     const handleSignOut = async () => {
         try {
-            const result = await fetch('/api/user/signout', {
+            const result = await fetch(`${BASE_URL}/api/user/signout`, {
                 method: 'POST',
 
             })

@@ -7,6 +7,8 @@ import OAuth from '../components/OAuth';
 
 function SignIn() {
 
+  const BASE_URL = import.meta.env.VITE_APP_BASE_URL
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector(state => state.user)
@@ -33,7 +35,7 @@ function SignIn() {
     try {
       dispatch(signInStart());
 
-      const result = await fetch('/api/auth/signin', {
+      const result = await fetch(`${BASE_URL}/api/auth/signin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

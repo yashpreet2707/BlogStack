@@ -7,6 +7,7 @@ import { FaCheck, FaTimes } from "react-icons/fa";
 const DashUsers = () => {
 
     const { currentUser } = useSelector((state) => state.user)
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
 
     const [users, setUsers] = useState([]);
     const [showMore, setShowMore] = useState(true);
@@ -16,7 +17,7 @@ const DashUsers = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await fetch(`/api/user/getusers`)
+                const res = await fetch(`${BASE_URL}/api/user/getusers`)
                 const data = await res.json()
 
                 if (res.ok) {
@@ -39,7 +40,7 @@ const DashUsers = () => {
     const handleShowMore = async () => {
         const startIndex = users.length;
         try {
-            const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`)
+            const res = await fetch(`${BASE_URL}/api/user/getusers?startIndex=${startIndex}`)
             const data = await res.json();
             if (res.ok) {
                 setUsers((prev) => [...prev, ...data.users])
@@ -54,7 +55,7 @@ const DashUsers = () => {
 
     const handleDeleteUser = async () => {
         try {
-            const result = await fetch(`/api/user/delete/${userIdToDelete}`, {
+            const result = await fetch(`${BASE_URL}/api/user/delete/${userIdToDelete}`, {
                 method: 'DELETE',
             })
             const data = await result.json()

@@ -6,6 +6,8 @@ import { Button, Textarea } from 'flowbite-react'
 
 const Comment = ({ comment, onLike, onEdit, onDelete }) => {
     const { currentUser } = useSelector(state => state.user)
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
+
 
     const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -13,7 +15,7 @@ const Comment = ({ comment, onLike, onEdit, onDelete }) => {
     useEffect(() => {
         const getUser = async () => {
             try {
-                const res = await fetch(`/api/user/${comment?.userId}`)
+                const res = await fetch(`${BASE_URL}/api/user/${comment?.userId}`)
                 const data = await res.json();
 
                 if (res.ok) {
@@ -34,7 +36,7 @@ const Comment = ({ comment, onLike, onEdit, onDelete }) => {
 
     const handleSave = async () => {
         try {
-            const res = await fetch(`/api/comment/editComment/${comment?._id}`, {
+            const res = await fetch(`${BASE_URL}/api/comment/editComment/${comment?._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

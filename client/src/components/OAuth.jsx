@@ -8,6 +8,8 @@ import { signInSuccess } from '../redux/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 const OAuth = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BASE_URL
+
 
   const auth = getAuth();
   const dispatch = useDispatch()
@@ -19,7 +21,7 @@ const OAuth = () => {
     try {
       const resultFromGoogle = await signInWithPopup(auth, provider)
 
-      const res = await fetch('/api/auth/google', {
+      const res = await fetch(`${BASE_URL}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

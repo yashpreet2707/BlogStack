@@ -7,6 +7,7 @@ import { Modal, ModalHeader, ModalBody } from 'flowbite-react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 const CommentSection = ({ postId }) => {
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
 
     const { currentUser } = useSelector(state => state.user)
     const navigate = useNavigate()
@@ -20,7 +21,7 @@ const CommentSection = ({ postId }) => {
         e.preventDefault();
         if (comment.length > 200) return;
         try {
-            const res = await fetch('/api/comment/create', {
+            const res = await fetch(`${BASE_URL}/api/comment/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -44,7 +45,7 @@ const CommentSection = ({ postId }) => {
     useEffect(() => {
         const getComments = async () => {
             try {
-                const res = await fetch(`/api/comment/getPostComments/${postId}`)
+                const res = await fetch(`/ api / comment / getPostComments / ${ postId }`)
                 const data = await res.json();
 
                 if (res.ok) {
@@ -65,7 +66,7 @@ const CommentSection = ({ postId }) => {
                 navigate('/sign-in')
                 return;
             }
-            const res = await fetch(`/api/comment/likecomment/${commentId}`, {
+            const res = await fetch(`/ api / comment / likecomment / ${ commentId }`, {
                 method: 'PUT',
             })
             if (res.ok) {
@@ -93,7 +94,7 @@ const CommentSection = ({ postId }) => {
 
     const handleDelete = async (commentId) => {
         try {
-            const res = await fetch(`/api/comment/deletecomment/${commentId}`, {
+            const res = await fetch(`/ api / comment / deletecomment / ${ commentId }`, {
                 method: 'DELETE'
             })
             if (res.ok) {

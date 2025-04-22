@@ -8,6 +8,8 @@ import PostCard from '../components/PostCard'
 const PostPage = () => {
 
     const { postSlug } = useParams();
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
+
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
@@ -20,7 +22,7 @@ const PostPage = () => {
         const fetchPost = async () => {
             try {
                 setLoading(true)
-                const response = await fetch(`/api/post/getposts?slug=${postSlug}`)
+                const response = await fetch(`${BASE_URL}/api/post/getposts?slug=${postSlug}`)
                 const data = await response.json();
                 if (!response.ok) {
                     setError(true)
@@ -42,7 +44,7 @@ const PostPage = () => {
     useEffect(() => {
         try {
             const fetchRecentPosts = async () => {
-                const res = await fetch(`/api/post/getposts?limit=3`)
+                const res = await fetch(`${BASE_URL}/api/post/getposts?limit=3`)
                 const data = await res.json();
                 if (res.ok) {
                     setRecentPosts(data.posts)

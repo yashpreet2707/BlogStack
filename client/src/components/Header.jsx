@@ -8,6 +8,8 @@ import { toggleTheme } from '../redux/theme/themeSlice';
 import { signOutSuccess } from '../redux/user/userSlice';
 
 const Header = () => {
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
+
     const path = useLocation().pathname;
     const navigate = useNavigate();
     const { currentUser } = useSelector(state => state.user);
@@ -30,7 +32,7 @@ const Header = () => {
 
     const handleSignOut = async () => {
         try {
-            const result = await fetch('/api/user/signout', {
+            const result = await fetch(`${BASE_URL}/api/user/signout`, {
                 method: 'POST',
 
             })
@@ -52,7 +54,7 @@ const Header = () => {
 
         const searchQuery = urlParams.toString();
 
-        navigate(`/search?${searchQuery}`)
+        navigate(`/search?${ searchQuery }`)
     }
 
     return (

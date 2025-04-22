@@ -4,6 +4,7 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useNavigate } from 'react-router-dom';
 const CreatePost = () => {
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL
 
     const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ const CreatePost = () => {
         e.preventDefault();
         console.log("handle submit called.")
         try {
-            const result = await fetch('/api/post/create', {
+            const result = await fetch(`${BASE_URL}/api/post/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,7 +53,7 @@ const CreatePost = () => {
                 setPublishError(data.message)
             } else {
                 setPublishError(null)
-                navigate(`/post/${data.slug}`)
+                navigate(`/ post / ${ data.slug }`)
             }
         } catch (error) {
             setPublishError("Something went wrong.")

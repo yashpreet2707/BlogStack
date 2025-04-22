@@ -4,6 +4,8 @@ import { Button, Select, TextInput } from 'flowbite-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import PostCard from '../components/PostCard'
 const Search = () => {
+  const BASE_URL = import.meta.env.VITE_APP_BASE_URL
+
   const location = useLocation()
   const navigate = useNavigate()
   const [sidebarData, setSidebarData] = useState({
@@ -28,7 +30,7 @@ const Search = () => {
     const fetchPosts = async () => {
       setLoading(true)
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/post/getposts?${searchQuery}`)
+      const res = await fetch(`${BASE_URL}/api/post/getposts?${searchQuery}`)
       if (!res.ok) {
         setLoading(false)
         return;
@@ -82,7 +84,7 @@ const Search = () => {
     urlParams.set('startIndex', startIndex);
     const searchQuery = urlParams.toString();
 
-    const res = await fetch(`/api/post/getposts?${searchQuery}`);
+    const res = await fetch(`${BASE_URL}/api/post/getposts?${searchQuery}`);
 
     if (!res.ok) {
       return;
