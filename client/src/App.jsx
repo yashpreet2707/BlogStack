@@ -14,7 +14,7 @@ import Home from "./pages/Home"
 import About from "./pages/About"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
-import Dashboard from "./pages/Dashboard"
+import DashBoard from "./pages/DashBoard"
 import Projects from "./pages/Projects"
 import CreatePost from './pages/CreatePost'
 import UpdatePost from './pages/UpdatePost'
@@ -37,7 +37,7 @@ function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/post/:postSlug" element={<PostPage />} />
         <Route element={<PrivateRoute />} >
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<DashBoard />} />
         </Route>
         <Route element={<OnlyAdminPrivateRoute />} >
           <Route path='/create-post' element={<CreatePost />} />
