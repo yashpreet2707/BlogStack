@@ -43,7 +43,8 @@ const Comment = ({ comment, onLike, onEdit, onDelete }) => {
                 },
                 body: JSON.stringify({
                     content: editedContent,
-                })
+                }),
+                credentials: "include" ,
             })
 
             if (res.ok) {

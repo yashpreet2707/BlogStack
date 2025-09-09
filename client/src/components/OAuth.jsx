@@ -28,7 +28,8 @@ const OAuth = () => {
           name: resultFromGoogle.user.displayName,
           email: resultFromGoogle.user.email,
           googlePhotoURL: resultFromGoogle.user.photoURL
-        })
+        }),
+        credentials: "include",
       });
       const data = await res.json();
 

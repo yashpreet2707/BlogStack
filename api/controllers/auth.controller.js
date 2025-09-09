@@ -3,6 +3,14 @@ import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production", // Fixed typo: was "psroduction"
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  path: "/",
+};
+
 // signup logic
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -12,11 +20,11 @@ export const signup = async (req, res, next) => {
   }
 
   try {
-    // Check for duplicate user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return next(errorHandler(409, "User with this email already exists"));
     }
+
     const hashedPassword = bcryptjs.hashSync(password, 10);
 
     const newUser = new User({
@@ -43,16 +51,10 @@ export const signin = async (req, res, next) => {
 
   try {
     const validUser = await User.findOne({ email });
-
-    if (!validUser) {
-      return next(errorHandler(404, "User not found")); //should write Invalid credentials
-    }
+    if (!validUser) return next(errorHandler(400, "Invalid credentials"));
 
     const validPassword = bcryptjs.compareSync(password, validUser.password);
-
-    if (!validPassword) {
-      return next(errorHandler(400, "Invalid password")); //should write Invalid credentials
-    }
+    if (!validPassword) return next(errorHandler(400, "Invalid credentials"));
 
     const token = jwt.sign(
       { id: validUser._id, isAdmin: validUser.isAdmin },
@@ -60,43 +62,34 @@ export const signin = async (req, res, next) => {
     );
 
     const { password: pass, ...rest } = validUser._doc;
+
+    // Set cookie and return token in response body for Authorization header approach
     res
       .status(200)
-      .cookie("access_token", token, {
-        httpOnly: true,
-      })
-      .json(rest);
+      .cookie("access_token", token, cookieOptions)
+      .json({
+        ...rest,
+        token, // Include token in response for localStorage storage
+      });
   } catch (err) {
-    next(err.message);
+    next(errorHandler(500, "Something went wrong during signin"));
   }
 };
 
+// google logic
 export const google = async (req, res, next) => {
   const { name, email, googlePhotoURL } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
-    if (user) {
-      const token = jwt.sign(
-        { id: user._id, isAdmin: user.isAdmin },
-        process.env.JWT_SECRET
-      );
-      const { password, ...rest } = user._doc;
-
-      res
-        .status(200)
-        .cookie("access_token", token, {
-          httpOnly: true,
-        })
-        .json(rest);
-    } else {
+    if (!user) {
       const generatedPass =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
       const hashedPassword = bcryptjs.hashSync(generatedPass, 10);
 
-      const newUser = new User({
+      user = new User({
         username:
           name.toLowerCase().split(" ").join("") +
           Math.random().toString(9).slice(-4),
@@ -105,22 +98,26 @@ export const google = async (req, res, next) => {
         profilePicture: googlePhotoURL,
       });
 
-      await newUser.save();
-
-      const token = jwt.sign(
-        { id: newUser._id, isAdmin: newUser.isAdmin },
-        process.env.JWT_SECRET
-      );
-      const { password: pass, ...rest } = newUser._doc;
-      res
-        .status(200)
-        .cookie("access_token", token, {
-          httpOnly: true,
-        })
-        .json(rest);
+      await user.save();
     }
+
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET
+    );
+
+    const { password, ...rest } = user._doc;
+
+    // Set cookie and return token in response body for Authorization header approach
+    res
+      .status(200)
+      .cookie("access_token", token, cookieOptions)
+      .json({
+        ...rest,
+        token, // Include token in response for localStorage storage
+      });
   } catch (err) {
-    console.log("erros has occured boss : " + err);
-    next(err);
+    console.error("Google auth error:", err);
+    next(errorHandler(500, "Something went wrong with Google auth"));
   }
 };

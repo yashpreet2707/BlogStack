@@ -26,7 +26,8 @@ const CommentSection = ({ postId }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ content: comment, postId, userId: currentUser._id })
+                body: JSON.stringify({ content: comment, postId, userId: currentUser._id }),
+                credentials: "include",
             })
 
             const data = await res.json();
@@ -45,7 +46,7 @@ const CommentSection = ({ postId }) => {
     useEffect(() => {
         const getComments = async () => {
             try {
-                const res = await fetch(`/ api / comment / getPostComments / ${ postId }`)
+                const res = await fetch(`/ api / comment / getPostComments / ${postId}`)
                 const data = await res.json();
 
                 if (res.ok) {
@@ -66,8 +67,9 @@ const CommentSection = ({ postId }) => {
                 navigate('/sign-in')
                 return;
             }
-            const res = await fetch(`/ api / comment / likecomment / ${ commentId }`, {
+            const res = await fetch(`/ api / comment / likecomment / ${commentId}`, {
                 method: 'PUT',
+                credentials: "include",
             })
             if (res.ok) {
                 const data = await res.json();
@@ -94,8 +96,9 @@ const CommentSection = ({ postId }) => {
 
     const handleDelete = async (commentId) => {
         try {
-            const res = await fetch(`/ api / comment / deletecomment / ${ commentId }`, {
-                method: 'DELETE'
+            const res = await fetch(`/ api / comment / deletecomment / ${commentId}`, {
+                method: 'DELETE',
+                credentials: "include",
             })
             if (res.ok) {
                 setComments(comments.filter(comment => comment._id !== commentId))

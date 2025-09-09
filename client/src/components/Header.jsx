@@ -31,19 +31,22 @@ const Header = () => {
     }, [location.search])
 
     const handleSignOut = async () => {
-        try {
-            const result = await fetch(`${BASE_URL}/api/user/signout`, {
-                method: 'POST',
+        if (window.confirm("Are you sure, you want to sign out?")) {
+            try {
+                const result = await fetch(`${BASE_URL}/api/user/signout`, {
+                    method: 'POST',
 
-            })
-            const data = await result.json();
-            if (!result.ok) {
-                console.log(data.message);
-            } else {
-                dispatch(signOutSuccess());
+                })
+                const data = await result.json();
+                localStorage.removeItem('access_token');
+                if (!result.ok) {
+                    console.log(data.message);
+                } else {
+                    dispatch(signOutSuccess());
+                }
+            } catch (err) {
+                console.log(err)
             }
-        } catch (err) {
-            console.log(err)
         }
     }
 
@@ -54,7 +57,7 @@ const Header = () => {
 
         const searchQuery = urlParams.toString();
 
-        navigate(`/search?${ searchQuery }`)
+        navigate(`/search?${searchQuery}`)
     }
 
     return (

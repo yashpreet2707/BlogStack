@@ -8,6 +8,7 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
+  console.log("Heyyyy update user.");
   if (req.user.id != req.params.userID) {
     return next(errorHandler(403, "You are not allowed to update this user."));
   }
@@ -74,10 +75,13 @@ export const deleteUser = async (req, res, next) => {
 
 export const signout = async (req, res, next) => {
   try {
-    res
-      .clearCookie("access_token")
-      .status(200)
-      .json("User has been signed out.");
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+    });
+    res.status(200).json({ message: "User logged out successfully" });
   } catch (err) {
     next(err);
   }

@@ -64,8 +64,6 @@ const UpdatePost = () => {
         }
     }
 
-    console.log(formData)
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -74,7 +72,8 @@ const UpdatePost = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                credentials: "include",
             })
             const data = await result.json();
             if (!result.ok) {

@@ -26,7 +26,6 @@ function SignIn() {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
   }
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
@@ -39,6 +38,7 @@ function SignIn() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
+        credentials: "include", // Add this for cookie support
       });
       const data = await result.json();
 
@@ -46,6 +46,11 @@ function SignIn() {
         dispatch(signInFailure(data.message));
       }
       if (result.ok) {
+        // Store token in localStorage for Authorization header approach
+        if (data.token) {
+          localStorage.setItem('access_token', data.token);
+        }
+
         dispatch(signInSuccess(data))
         navigate('/home')
       }
@@ -70,7 +75,6 @@ function SignIn() {
             </div>
             <p className='mt-5 '>This is a demo project. You can sign up with your email and password or with Google.</p>
           </div>
-
 
           <div className='flex-1 mt-[5vh] sm:mt-0'>
             <form className='flex flex-col gap-4' onSubmit={handleSubmit}>

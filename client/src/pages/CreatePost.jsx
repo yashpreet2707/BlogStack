@@ -27,6 +27,7 @@ const CreatePost = () => {
             const res = await fetch("https://api.cloudinary.com/v1_1/dhr2ijbmb/image/upload", {
                 method: "PUT",
                 body: data,
+                credentials: "include",
             })
 
             const uploadedImageURL = await res.json();
@@ -47,13 +48,14 @@ const CreatePost = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
+                credentials: "include",
             })
             const data = await result.json();
             if (!result.ok) {
                 setPublishError(data.message)
             } else {
                 setPublishError(null)
-                navigate(`/ post / ${ data.slug }`)
+                navigate(`/post/${data.slug}`)
             }
         } catch (error) {
             setPublishError("Something went wrong.")

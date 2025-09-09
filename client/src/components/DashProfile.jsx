@@ -42,6 +42,7 @@ const DashProfile = () => {
             const res = await fetch("https://api.cloudinary.com/v1_1/dhr2ijbmb/image/upload", {
                 method: 'PUT',
                 body: data,
+                credentials: "include" ,
             })
 
             const uploadedImageURL = await res.json();
@@ -62,6 +63,7 @@ const DashProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (Object.keys(formData).length === 0) {
             return;
         }
@@ -73,6 +75,7 @@ const DashProfile = () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData),
+                credentials: "include",
             });
             const data = await result.json();
 
@@ -83,6 +86,7 @@ const DashProfile = () => {
                 setUserUpdateSuccess("User's profile updated successfully!")
             }
         } catch (error) {
+            console.log("error occ")
             dispatch(updateFailure(error.message))
         }
     }
@@ -93,6 +97,7 @@ const DashProfile = () => {
             dispatch(deleteUserStart());
             const result = await fetch(`${BASE_URL}/api/user/delete/${currentUser._id}`, {
                 method: 'DELETE',
+                credentials: "include" ,
             })
             const data = await result.json();
             if (!result.ok) {
@@ -108,19 +113,24 @@ const DashProfile = () => {
     }
 
     const handleSignOut = async () => {
-        try {
-            const result = await fetch(`${BASE_URL}/api/user/signout`, {
-                method: 'POST',
+        if (window.confirm("Are you sure, you want to sign out ?")) {
+            try {
+                const result = await fetch(`${BASE_URL}/api/user/signout`, {
+                    method: 'POST',
+                    credentials: "include" ,
 
-            })
-            const data = await result.json();
-            if (!result.ok) {
-                console.log(data.message);
-            } else {
-                dispatch(signOutSuccess());
+                })
+                const data = await result.json();
+                localStorage.removeItem('access_token');
+                if (!result.ok) {
+                    console.log(data.message);
+                } else {
+                    dispatch(signOutSuccess());
+                }
+
+            } catch (err) {
+                console.log(err)
             }
-        } catch (err) {
-            console.log(err)
         }
     }
 
@@ -163,7 +173,7 @@ const DashProfile = () => {
                         <HiOutlineExclamationCircle className='mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200' />
                         <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>Are you sure you want to delete your account?</h3>
                         <div className='flex justify-center gap-x-4'>
-                            <Button color='failure' onClick={handleDeteteUser}>Yes, I'm sure</Button>
+                            <Button color='failure' className='text-red-500' onClick={handleDeteteUser}>Yes, I'm sure</Button>
                             <Button color='gray' onClick={() => setShowModal(false)}>No, cancel</Button>
                         </div>
                     </div>
