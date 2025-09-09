@@ -77,9 +77,9 @@ const Header = () => {
             </form>
             <Button className='w-15 h-10 lg:hidden' color='gray'><AiOutlineSearch size={50} /></Button>
             <div className='flex gap-2 md:order-2'>
-                <Button className='w-12 h-10 hidden sm:inline' color='gray' pill onClick={() => dispatch(toggleTheme())}>
+                {/*<Button className='w-12 h-10 hidden sm:inline' color='gray' pill onClick={() => dispatch(toggleTheme())}>
                     {(theme === 'dark') ? <FaMoon /> : <FaSun />}
-                </Button>
+                </Button>*/}
                 {currentUser ? (
                     <Dropdown arrowIcon={false} inline label={<Avatar alt="user" img={currentUser.profilePicture} rounded />}>
                         <DropdownHeader>
