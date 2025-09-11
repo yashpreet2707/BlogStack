@@ -18,7 +18,10 @@ const DashComments = () => {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const res = await fetch(`${BASE_URL}/api/comment/getcomments`)
+                const res = await fetch(`${BASE_URL}/api/comment/getcomments`, {
+                    method: "GET",
+                    credentials: "include",
+                })
                 const data = await res.json()
 
                 if (res.ok) {

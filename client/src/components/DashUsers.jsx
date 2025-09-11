@@ -17,12 +17,15 @@ const DashUsers = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await fetch(`${BASE_URL}/api/user/getusers`)
+                const res = await fetch(`${BASE_URL}/api/user/getusers`, {
+                    method: 'GET',
+                    credentials: "include",
+                })
                 const data = await res.json()
 
                 if (res.ok) {
                     setUsers(data.users);
-                    if (data.users.length < 9) {
+                    if (data.users.length <= 9) {
                         setShowMore(false)
                     }
                 }
@@ -35,12 +38,15 @@ const DashUsers = () => {
             fetchUsers()
         }
 
-    }, [currentUser._id])
+    }, [currentUser._id, currentUser.isAdmin])
 
     const handleShowMore = async () => {
         const startIndex = users.length;
         try {
-            const res = await fetch(`${BASE_URL}/api/user/getusers?startIndex=${startIndex}`)
+            const res = await fetch(`${BASE_URL}/api/user/getusers?startIndex=${startIndex}`, {
+                method: "GET",
+                credentials: "include"
+            })
             const data = await res.json();
             if (res.ok) {
                 setUsers((prev) => [...prev, ...data.users])
@@ -57,7 +63,7 @@ const DashUsers = () => {
         try {
             const result = await fetch(`${BASE_URL}/api/user/delete/${userIdToDelete}`, {
                 method: 'DELETE',
-                credentials: "include" ,
+                credentials: "include",
             })
             const data = await result.json()
             if (result.ok) {

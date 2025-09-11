@@ -42,7 +42,6 @@ const DashProfile = () => {
             const res = await fetch("https://api.cloudinary.com/v1_1/dhr2ijbmb/image/upload", {
                 method: 'PUT',
                 body: data,
-                credentials: "include" ,
             })
 
             const uploadedImageURL = await res.json();

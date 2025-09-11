@@ -36,7 +36,6 @@ export const signup = async (req, res, next) => {
     await newUser.save();
     res.status(201).json("User created successfully");
   } catch (err) {
-    console.error("Error during signup:", err);
     next(errorHandler(500, "Something went wrong. Please try again later."));
   }
 };

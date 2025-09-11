@@ -5,7 +5,7 @@ export const verifyToken = (req, res, next) => {
   // Try cookie first, then Authorization header
   let token = req.cookies.access_token;
 
-  // If no cookie, try Authorization header
+  // If no cookie, try Authorization header ( for mobile applications )
   if (!token) {
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith("Bearer ")) {
@@ -13,7 +13,7 @@ export const verifyToken = (req, res, next) => {
     }
   }
 
-  console.log("token : ", token);
+  // console.log("token : ", token);
   if (!token) {
     return next(errorHandler(401, "Unauthorized"));
   }

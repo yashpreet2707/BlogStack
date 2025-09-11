@@ -46,7 +46,10 @@ const CommentSection = ({ postId }) => {
     useEffect(() => {
         const getComments = async () => {
             try {
-                const res = await fetch(`/ api / comment / getPostComments / ${postId}`)
+                const res = await fetch(`${BASE_URL}/api/comment/getPostComments/${postId}`, {
+                    method: "GET",
+                    credentials: "include"
+                })
                 const data = await res.json();
 
                 if (res.ok) {
@@ -67,7 +70,7 @@ const CommentSection = ({ postId }) => {
                 navigate('/sign-in')
                 return;
             }
-            const res = await fetch(`/ api / comment / likecomment / ${commentId}`, {
+            const res = await fetch(`${BASE_URL}/api/comment/likecomment/${commentId}`, {
                 method: 'PUT',
                 credentials: "include",
             })
@@ -96,7 +99,7 @@ const CommentSection = ({ postId }) => {
 
     const handleDelete = async (commentId) => {
         try {
-            const res = await fetch(`/ api / comment / deletecomment / ${commentId}`, {
+            const res = await fetch(`${BASE_URL}/api/comment/deletecomment/${commentId}`, {
                 method: 'DELETE',
                 credentials: "include",
             })
@@ -159,7 +162,7 @@ const CommentSection = ({ postId }) => {
                         <HiOutlineExclamationCircle className='mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200' />
                         <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>Are you sure you want to delete your account?</h3>
                         <div className='flex justify-center gap-x-4'>
-                            <Button color='failure' onClick={() => handleDelete(commentToDelete)}>Yes, I'm sure</Button>
+                            <Button color='failure' className='text-red-500' onClick={() => handleDelete(commentToDelete)}>Yes, I'm sure</Button>
                             <Button color='gray' onClick={() => setShowModal(false)}>No, cancel</Button>
                         </div>
                     </div>

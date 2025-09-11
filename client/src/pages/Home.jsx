@@ -31,19 +31,21 @@ function Home() {
         <Link to='/search' className='text-xs sm:text-sm text-teal-500 font-bold hover:underline'>View All Posts</Link>
       </div>
       <div className='max-w-8xl mx-auto p-3 flex flex-col gap-8 py-7'>
-        {posts && posts.length > 0 && (
-          <div className='flex flex-col gap-4'>
-            <h2 className='text-3xl font-bold text-center my-5'>Recent Posts</h2>
-            {posts.length === 0 ? (<>Loading...</>) : (<div className='p-3 flex flex-col sm:flex-row gap-4 flex-wrap justify-center items-center'>
-              {posts.map(post => (
-                <div key={post._id} className='sm:w-lg w-full'>
-                  <PostCard key={post._id} post={post} />
-                </div>
-              ))}
-            </div>)}
-            <Link to={'/search'} className='text-lg mx-auto text-teal-500 font-bold hover:underline'>View All Posts</Link>
-          </div>
-        )}
+        <div className='flex flex-col gap-4'>
+          <h2 className='text-3xl font-bold text-center my-5'>Recent Posts</h2>
+          {posts.length === 0 ? (<div className='mx-auto mt-5 mb-10'>Loading...</div>) : (
+            <>
+              <div className='p-3 flex flex-col sm:flex-row gap-4 flex-wrap justify-center items-center'>
+                {posts.map(post => (
+                  <div key={post._id} className='sm:w-lg w-full'>
+                    <PostCard key={post._id} post={post} />
+                  </div>
+                ))}
+              </div>
+              <Link to={'/search'} className='text-lg mx-auto text-teal-500 font-bold hover:underline'>View All Posts</Link>
+            </>)
+          }
+        </div>
       </div>
       <div className='p-3'>
         <CallToAction />
