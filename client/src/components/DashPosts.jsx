@@ -14,19 +14,24 @@ const DashPosts = () => {
     const [showModal, setShowModal] = useState(false);
     const [postIdToDelete, setPostIdToDelete] = useState('');
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         const fetchPosts = async () => {
             try {
+                setLoading(true)
                 const res = await fetch(`${BASE_URL}/api/post/getposts?userId=${currentUser._id}`)
                 const data = await res.json()
 
                 if (res.ok) {
                     setUserPosts(data.posts);
+                    setLoading(false)
                     if (data.posts.length < 9) {
                         setShowMore(false)
                     }
                 }
             } catch (error) {
+                setLoading(false)
                 console.log(error);
             }
         }
@@ -74,8 +79,8 @@ const DashPosts = () => {
 
     return (
         <div className='h-full table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-            {currentUser.isAdmin && userPosts.length > 0 ? (
-                <>
+            {!loading ? (
+                userPosts.length === 0 ? (<p>There are no posts.</p>) : (<>
                     <Table hoverable className='shadow-md'>
                         <TableHead>
                             <TableRow>
@@ -108,8 +113,8 @@ const DashPosts = () => {
                         ))}
                     </Table>
                     {showMore && <button onClick={handleShowMore} className='text-teal-500 w-full self-center text-sm py-7'>Show more</button>}
-                </>
-            ) : (<p>You have no posts yet!</p>)}
+                </>)
+            ) : (<div>Loading...</div>)}
             <Modal show={showModal} onClose={() => setShowModal(false)} popup size='md'>
                 <ModalHeader />
                 <ModalBody>

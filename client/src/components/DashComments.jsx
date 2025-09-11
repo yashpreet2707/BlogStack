@@ -15,9 +15,12 @@ const DashComments = () => {
     const [showModal, setShowModal] = useState(false);
     const [commentIdToDelete, setCommentIdToDelete] = useState('');
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         const fetchComments = async () => {
             try {
+                setLoading(true)
                 const res = await fetch(`${BASE_URL}/api/comment/getcomments`, {
                     method: "GET",
                     credentials: "include",
@@ -26,12 +29,14 @@ const DashComments = () => {
 
                 if (res.ok) {
                     setComments(data.comments);
+                    setLoading(false);
                     if (data.comments.length < 5) {
                         setShowMore(false)
                     }
                 }
             } catch (error) {
                 console.log(error);
+                setLoading(false)
             }
         }
 
@@ -76,8 +81,8 @@ const DashComments = () => {
 
     return (
         <div className='h-full table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-            {currentUser.isAdmin && comments.length > 0 ? (
-                <>
+            {!loading ? (
+                (comments.length === 0) ? (<p>You have no comments!</p>) : (<>
                     <Table hoverable className='shadow-md'>
                         <TableHead>
                             <TableRow className='whitespace-nowrap'>
@@ -106,8 +111,8 @@ const DashComments = () => {
                         ))}
                     </Table>
                     {showMore && <button onClick={handleShowMore} className='text-teal-500 w-full self-center text-sm py-7'>Show more</button>}
-                </>
-            ) : (<p>You have no comments!</p>)
+                </>)
+            ) : (<div>Loading...</div>)
             }
             <Modal show={showModal} onClose={() => setShowModal(false)} popup size='md'>
                 <ModalHeader />

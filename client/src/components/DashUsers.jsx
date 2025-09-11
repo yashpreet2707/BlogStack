@@ -14,9 +14,12 @@ const DashUsers = () => {
     const [showModal, setShowModal] = useState(false);
     const [userIdToDelete, setUserIdToDelete] = useState('');
 
+    const [loading, setLoading] = useState(false)
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
+                setLoading(true)
                 const res = await fetch(`${BASE_URL}/api/user/getusers`, {
                     method: 'GET',
                     credentials: "include",
@@ -25,12 +28,14 @@ const DashUsers = () => {
 
                 if (res.ok) {
                     setUsers(data.users);
+                    setLoading(false)
                     if (data.users.length <= 9) {
                         setShowMore(false)
                     }
                 }
             } catch (error) {
                 console.log(error);
+                setLoading(false)
             }
         }
 
@@ -79,8 +84,8 @@ const DashUsers = () => {
 
     return (
         <div className='h-full table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-            {currentUser.isAdmin && users.length > 0 ? (
-                <>
+            {!loading ? (
+                users.length !== 0 ? (<>
                     <Table hoverable className='shadow-md'>
                         <TableHead>
                             <TableRow>
@@ -109,8 +114,8 @@ const DashUsers = () => {
                         ))}
                     </Table>
                     {showMore && <button onClick={handleShowMore} className='text-teal-500 w-full self-center text-sm py-7'>Show more</button>}
-                </>
-            ) : (<p>You have no users!</p>)
+                </>) : (<p>You have no users!</p>)
+            ) : (<div>Loading...</div>)
             }
             <Modal show={showModal} onClose={() => setShowModal(false)} popup size='md'>
                 <ModalHeader />
